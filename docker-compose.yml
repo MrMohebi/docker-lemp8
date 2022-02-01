@@ -1,0 +1,58 @@
+# ports: HOST:CONTAINER
+
+version: '3.8' 
+services:
+    nginx:
+        image: nginx:alpine
+        container_name: time-nginx
+        restart: unless-stopped
+#        command: >
+#            sh -c "nginx -g daemon off;"
+
+        volumes:
+            - ./app/:/var/www/html
+            - ./nginx/conf.d/:/etc/nginx/conf.d/
+        environment:
+            - VIRTUAL_HOST=time.devmrm.ir
+            - VIRTUAL_PORT=80
+        networks:
+            - nproxy
+            - lemp-network-time
+            
+    php:
+        build: .
+        container_name: time-php8
+        restart: always
+        volumes:
+            - ./app/:/var/www/html
+        depends_on:
+            - mongo
+            - nginx
+        networks:
+            - lemp-network-time
+           
+           
+    mongo:
+        image: mongo
+        container_name: time-mongo
+        restart: always
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=root
+            - MONGO_INITDB_ROOT_PASSWORD=password
+            - VIRTUAL_HOST=dbtime.devmrm.ir
+            - VIRTUAL_PORT=27017
+        volumes:
+            - ./mongo/data:/data/db
+        networks:
+            - lemp-network-time
+            - nproxy
+
+    
+
+
+networks:
+    nproxy:
+        external:
+          name: nginx-proxy-net 
+    lemp-network-time:
+        driver: bridge
