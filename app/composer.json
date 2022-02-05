@@ -1,0 +1,17 @@
+{
+    "name": "mrm/t1",
+    "autoload": {
+        "psr-4": {
+            "Mrm\\T1\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "MMMoehebi",
+            "email": "MMMohebi@outlook.com"
+        }
+    ],
+    "require": {
+        "mongodb/mongodb": "^1.11"
+    }
+}
