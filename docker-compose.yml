@@ -14,7 +14,7 @@ services:
             - VIRTUAL_PORT=80
         networks:
             - nproxy
-            - lemp-network-${APP_NAME}
+            - internal
             
     php:
         build: .
@@ -24,7 +24,7 @@ services:
             - mongo
             - nginx
         networks:
-            - lemp-network-${APP_NAME}      
+            - internal      
            
     mongo:
         image: mongo
@@ -40,7 +40,7 @@ services:
         volumes:
             - ./mongo/data:/data/db
         networks:
-            - lemp-network-${APP_NAME}
+            - internal
             - nproxy
 
 
@@ -48,5 +48,6 @@ networks:
     nproxy:
         external:
           name: nginx-proxy-net 
-    lemp-network-${APP_NAME}:
+    internal:
+        name: lemp-network-${APP_NAME}
         driver: bridge
